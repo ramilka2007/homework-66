@@ -9,12 +9,22 @@ interface Props {
   isLoading?: boolean;
 }
 
-const MealForm: React.FC<Props> = ({ onSubmit, existingMeal, isLoading = false }) => {
-  const [mealMutation, setMealMutation] = useState<MealMutation>({
-    mealTime: 'breakfast',
-    description: '',
-    calories: '',
-  });
+const emptyState: MealMutation = {
+  mealTime: 'Breakfast',
+  description: '',
+  calories: '',
+};
+
+const MealForm: React.FC<Props> = ({
+  onSubmit,
+  existingMeal,
+  isLoading = false,
+}) => {
+  const initialState: MealMutation = existingMeal
+    ? { ...existingMeal, calories: existingMeal.calories.toString() }
+    : emptyState;
+
+  const [mealMutation, setMealMutation] = useState<MealMutation>(initialState);
   const [loading, setLoading] = useState(false);
 
   const changeMeal = (
@@ -41,7 +51,7 @@ const MealForm: React.FC<Props> = ({ onSubmit, existingMeal, isLoading = false }
   };
   return (
     <form onSubmit={onFormSubmit}>
-      <h1>Add new dish</h1>
+      <h1>{existingMeal ? 'Edit dish' : 'Add new dish'}</h1>
       {loading ? (
         <Spinner />
       ) : (
@@ -57,10 +67,10 @@ const MealForm: React.FC<Props> = ({ onSubmit, existingMeal, isLoading = false }
               value={mealMutation.mealTime}
               onChange={changeMeal}
             >
-              <option value="breakfast">Breakfast</option>
-              <option value="snack">Snack</option>
-              <option value="lunch">Lunch</option>
-              <option value="dinner">Dinner</option>
+              <option value="Breakfast">Breakfast</option>
+              <option value="Snack">Snack</option>
+              <option value="Lunch">Lunch</option>
+              <option value="Dinner">Dinner</option>
             </select>
           </div>
           <div className="form-group mt-4 mb-4">
@@ -68,6 +78,7 @@ const MealForm: React.FC<Props> = ({ onSubmit, existingMeal, isLoading = false }
               Meal description
             </label>
             <textarea
+              required
               name="description"
               id="description"
               className="form-control"
@@ -97,7 +108,7 @@ const MealForm: React.FC<Props> = ({ onSubmit, existingMeal, isLoading = false }
             disabled={isLoading}
           >
             {isLoading && <ButtonSpinner />}
-            Create
+            Save
           </button>
         </>
       )}

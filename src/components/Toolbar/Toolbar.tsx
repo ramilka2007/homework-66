@@ -9,11 +9,6 @@ const Toolbar = () => {
             Calorie tracker
           </NavLink>
         </div>
-        <div>
-          <NavLink className="navbar-brand text-black fw-bold" to="/add-meal">
-            Add new meal
-          </NavLink>
-        </div>
       </div>
     </nav>
   );
